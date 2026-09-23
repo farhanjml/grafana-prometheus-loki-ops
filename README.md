@@ -1,6 +1,6 @@
-# Grafana, Prometheus & Loki Ops Skill
+# Grafana, Prometheus & Loki Ops
 
-A Hermes runbook and deployment starter for a single-host Grafana, Prometheus, and Loki stack.
+A deployment starter and operations guide for a single-host Grafana, Prometheus, and Loki stack.
 
 ## Includes
 
