@@ -103,8 +103,8 @@ Run commands on the monitoring host. Use the correct service names and access me
 - **An empty dashboard panel is not enough to prove a pipeline failure.** Query the underlying data with the panel's filters, check the record's freshness, and confirm that the upstream system should have produced a non-empty result.
 - **Never put passwords or tokens in commands, files, or shell history.** Use the site's approved secret store or a protected interactive prompt for authenticated operations.
 
-## What This Runbook Does Not Contain
+## Related Repository Files
 
-- Stack installation or first-time service configuration steps.
-- Exported Grafana dashboard JSON.
-- Environment-specific hosts, addresses, credentials, or data-source names.
+- `INSTALL.md` contains the single-host installation and configuration steps.
+- `config/` and `systemd/` contain portable service templates.
+- `provisioning/` and `dashboards/` contain Grafana provisioning and dashboard JSON.

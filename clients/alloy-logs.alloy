@@ -1,0 +1,16 @@
+local.file_match "logs" {
+  path_targets = [{"__path__" = "/var/log/*.log", "job" = "system-log"}]
+  sync_period = "5s"
+}
+
+loki.source.file "logs" {
+  targets = local.file_match.logs.targets
+  forward_to = [loki.write.default.receiver]
+  tail_from_end = true
+}
+
+loki.write "default" {
+  endpoint {
+    url = "<LOKI_PUSH_URL>"
+  }
+}

@@ -1,11 +1,15 @@
 # Grafana, Prometheus & Loki Ops Skill
 
-A Hermes runbook for checking and troubleshooting an existing Grafana, Prometheus, and Loki stack.
+A Hermes runbook and deployment starter for a single-host Grafana, Prometheus, and Loki stack.
 
-It covers service health, live Prometheus data, Loki ingestion, Grafana data sources, and common failure modes.
+## Includes
 
-**This is not a stack installer.** It does not include step-by-step deployment/configuration instructions or dashboard JSON files.
+- Step-by-step install and configuration guide.
+- Prometheus and Loki configuration plus systemd units.
+- Grafana data-source and dashboard provisioning files.
+- Portable dashboard JSON for host metrics, disk usage, and Loki logs.
+- Operational checks and troubleshooting notes in `SKILL.md`.
 
-## Use with Hermes
+The guide records the versions observed on the source stack: Grafana 13.1.0, Prometheus 3.1.0, and Loki 3.7.3. Review version pins before a new production install.
 
-Copy `SKILL.md` to `$HERMES_HOME/skills/grafana-prom-loki-ops/SKILL.md`. If `HERMES_HOME` is unset, use `~/.hermes/skills/grafana-prom-loki-ops/SKILL.md`. Start a new Hermes session to load it.
+Start with [INSTALL.md](INSTALL.md). The `config/`, `systemd/`, `provisioning/`, `clients/`, and `dashboards/` directories contain the matching templates.

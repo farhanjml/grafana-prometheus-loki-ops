@@ -1,0 +1,22 @@
+{
+  "id": null,
+  "uid": "host-node-overview",
+  "title": "Host Metrics Overview",
+  "tags": ["infrastructure", "node-exporter"],
+  "timezone": "browser",
+  "schemaVersion": 42,
+  "version": 1,
+  "refresh": "1m",
+  "time": {"from": "now-1h", "to": "now"},
+  "annotations": {"list": [{"builtIn": 1, "datasource": {"type": "grafana", "uid": "-- Grafana --"}, "enable": true, "hide": true, "iconColor": "rgba(0, 211, 255, 1)", "name": "Annotations & Alerts", "type": "dashboard"}]},
+  "templating": {"list": [
+    {"name": "job", "label": "Job", "type": "query", "datasource": {"type": "prometheus", "uid": "prometheus"}, "definition": "label_values(node_cpu_seconds_total, job)", "query": {"query": "label_values(node_cpu_seconds_total, job)", "refId": "StandardVariableQuery"}, "refresh": 1, "multi": true, "includeAll": true, "allValue": ".+", "current": {"selected": true, "text": "All", "value": "$__all"}, "options": []},
+    {"name": "instance", "label": "Instance", "type": "query", "datasource": {"type": "prometheus", "uid": "prometheus"}, "definition": "label_values(node_cpu_seconds_total{job=~\"$job\"}, instance)", "query": {"query": "label_values(node_cpu_seconds_total{job=~\"$job\"}, instance)", "refId": "StandardVariableQuery"}, "refresh": 1, "multi": true, "includeAll": true, "allValue": ".+", "current": {"selected": true, "text": "All", "value": "$__all"}, "options": []}
+  ]},
+  "panels": [
+    {"id": 1, "type": "timeseries", "title": "CPU Busy", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "100 * (1 - avg by (instance) (rate(node_cpu_seconds_total{job=~\"$job\",instance=~\"$instance\",mode=\"idle\"}[5m])))", "legendFormat": "{{instance}}", "refId": "A"}], "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}, "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}},
+    {"id": 2, "type": "timeseries", "title": "Memory Used", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "100 * (1 - node_memory_MemAvailable_bytes{job=~\"$job\",instance=~\"$instance\"} / node_memory_MemTotal_bytes{job=~\"$job\",instance=~\"$instance\"})", "legendFormat": "{{instance}}", "refId": "A"}], "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}, "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}},
+    {"id": 3, "type": "timeseries", "title": "Load Average (1m)", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "node_load1{job=~\"$job\",instance=~\"$instance\"}", "legendFormat": "{{instance}}", "refId": "A"}], "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}, "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}},
+    {"id": 4, "type": "timeseries", "title": "Filesystem Usage", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "100 - (node_filesystem_avail_bytes{job=~\"$job\",instance=~\"$instance\",fstype!=\"rootfs\"} * 100 / node_filesystem_size_bytes{job=~\"$job\",instance=~\"$instance\",fstype!=\"rootfs\"})", "legendFormat": "{{instance}} {{mountpoint}}", "refId": "A"}], "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}, "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}}
+  ]
+}

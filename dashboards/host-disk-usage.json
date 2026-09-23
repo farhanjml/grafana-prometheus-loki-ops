@@ -1,0 +1,22 @@
+{
+  "id": null,
+  "uid": "host-disk-usage",
+  "title": "Host Disk Usage",
+  "tags": ["infrastructure", "filesystem"],
+  "timezone": "browser",
+  "schemaVersion": 42,
+  "version": 1,
+  "refresh": "1m",
+  "time": {"from": "now-24h", "to": "now"},
+  "annotations": {"list": [{"builtIn": 1, "datasource": {"type": "grafana", "uid": "-- Grafana --"}, "enable": true, "hide": true, "iconColor": "rgba(0, 211, 255, 1)", "name": "Annotations & Alerts", "type": "dashboard"}]},
+  "templating": {"list": [
+    {"name": "job", "label": "Job", "type": "query", "datasource": {"type": "prometheus", "uid": "prometheus"}, "definition": "label_values(node_filesystem_size_bytes, job)", "query": {"query": "label_values(node_filesystem_size_bytes, job)", "refId": "StandardVariableQuery"}, "refresh": 1, "multi": true, "includeAll": true, "allValue": ".+", "current": {"selected": true, "text": "All", "value": "$__all"}, "options": []},
+    {"name": "mountpoint", "label": "Mountpoint", "type": "query", "datasource": {"type": "prometheus", "uid": "prometheus"}, "definition": "label_values(node_filesystem_size_bytes{job=~\"$job\",fstype!=\"rootfs\"}, mountpoint)", "query": {"query": "label_values(node_filesystem_size_bytes{job=~\"$job\",fstype!=\"rootfs\"}, mountpoint)", "refId": "StandardVariableQuery"}, "refresh": 1, "multi": true, "includeAll": true, "allValue": ".+", "current": {"selected": true, "text": "All", "value": "$__all"}, "options": []}
+  ]},
+  "panels": [
+    {"id": 1, "type": "stat", "title": "Filesystems Reporting", "gridPos": {"h": 5, "w": 8, "x": 0, "y": 0}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "count(node_filesystem_size_bytes{job=~\"$job\",mountpoint=~\"$mountpoint\",fstype!=\"rootfs\"})", "instant": true, "refId": "A"}], "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}, "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto", "colorMode": "value", "graphMode": "none"}},
+    {"id": 2, "type": "stat", "title": "Filesystems Above 90%", "gridPos": {"h": 5, "w": 8, "x": 8, "y": 0}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "count((100 - (node_filesystem_avail_bytes{job=~\"$job\",mountpoint=~\"$mountpoint\",fstype!=\"rootfs\"} * 100 / node_filesystem_size_bytes{job=~\"$job\",mountpoint=~\"$mountpoint\",fstype!=\"rootfs\"})) > 90) or vector(0)", "instant": true, "refId": "A"}], "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}, "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto", "colorMode": "background", "graphMode": "none"}},
+    {"id": 3, "type": "gauge", "title": "Disk Usage by Instance", "gridPos": {"h": 8, "w": 24, "x": 0, "y": 5}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "100 - (node_filesystem_avail_bytes{job=~\"$job\",mountpoint=~\"$mountpoint\",fstype!=\"rootfs\"} * 100 / node_filesystem_size_bytes{job=~\"$job\",mountpoint=~\"$mountpoint\",fstype!=\"rootfs\"})", "instant": true, "legendFormat": "{{instance}} {{mountpoint}}", "refId": "A"}], "fieldConfig": {"defaults": {"min": 0, "max": 100, "unit": "percent", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 70}, {"color": "red", "value": 90}]}}, "overrides": []}, "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "showThresholdMarkers": true, "showThresholdLabels": false}},
+    {"id": 4, "type": "timeseries", "title": "Disk Usage Trend", "gridPos": {"h": 9, "w": 24, "x": 0, "y": 13}, "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"expr": "100 - (node_filesystem_avail_bytes{job=~\"$job\",mountpoint=~\"$mountpoint\",fstype!=\"rootfs\"} * 100 / node_filesystem_size_bytes{job=~\"$job\",mountpoint=~\"$mountpoint\",fstype!=\"rootfs\"})", "legendFormat": "{{job}} / {{instance}} / {{mountpoint}}", "refId": "A"}], "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}, "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}}
+  ]
+}
